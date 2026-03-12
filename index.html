@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyse Immobilière</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f2f1ed;
+  --surface: #ffffff;
+  --surface2: #f8f7f4;
+  --border: #e5e3dc;
+  --text: #1a1917;
+  --text-muted: #8a8680;
+  --accent: #2d6a4f;
+  --accent-light: #e8f3ed;
+  --accent2: #b5803a;
+  --accent2-light: #fdf3e3;
+  --red: #c0392b;
+  --red-light: #fdecea;
+  --orange: #d4620a;
+  --orange-light: #fef0e6;
+  --green: #1e7a4a;
+  --green-light: #e6f5ed;
+  --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 28px 20px 80px;
+}
+
+.container { max-width: 880px; margin: 0 auto; }
+
+/* ── HEADER ── */
+header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+header p { color: var(--text-muted); font-size: 0.9rem; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 5px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  gap: 3px;
+  overflow-x: auto;
+}
+.tab-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.tab-btn.active {
+  background: var(--text);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.tab-btn:not(.active):hover { background: var(--surface2); color: var(--text); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── PRINT BTN ── */
+.page-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+.btn:hover { opacity: 0.78; }
+.btn-dark { background: var(--text); color: white; }
+.btn-outline { background: var(--surface); color: var(--text); border: 1.5px solid var(--border); }
+.btn-accent { background: var(--accent); color: white; }
+.btn-sm { padding: 7px 13px; font-size: 0.78rem; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.card-title-row .card-title { margin-bottom: 0; }
+
+/* ── FORM ── */
+.field-grid {
+  display: grid;
+  gap: 13px;
+}
+.col-2 { grid-template-columns: 1fr 1fr; }
+.col-3 { grid-template-columns: 1fr 1fr 1fr; }
+.col-1 { grid-template-columns: 1fr; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field label, label.field-lbl {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--surface2);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  background: white;
+}
+input[readonly] {
+  background: #eeede9;
+  color: var(--text-muted);
+  cursor: default;
+}
+textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+
+.input-wrap { position: relative; }
+.input-unit {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.input-wrap input { padding-right: 44px; }
+
+/* SELECT arrow */
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* ── SEGMENTED ── */
+.segmented {
+  display: flex;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 2px;
+  border: 1.5px solid var(--border);
+}
+.segmented input[type="radio"] { display: none; }
+.segmented label {
+  flex: 1;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.17s;
+  letter-spacing: 0;
+}
+.segmented input[type="radio"]:checked + label {
+  background: white;
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* ── TOGGLE ── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-info { flex: 1; }
+.toggle-lbl { font-size: 0.88rem; font-weight: 500; color: var(--text); margin-bottom: 1px; }
+.toggle-sub { font-size: 0.76rem; color: var(--text-muted); }
+.toggle { position: relative; width: 46px; height: 27px; flex-shrink: 0; margin-left: 16px; }
+.toggle input { display: none; }
+.toggle-track {
+  position: absolute; inset: 0;
+  background: #ccc;
+  border-radius: 14px; cursor: pointer;
+  transition: background 0.25s;
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 21px; height: 21px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toggle input:checked ~ .toggle-track { background: var(--accent); }
+.toggle input:checked ~ .toggle-track::after { transform: translateX(19px); }
+
+/* ── RESULT CARD ── */
+.result-card {
+  background: var(--text);
+  color: white;
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  margin-bottom: 14px;
+}
+.result-title {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  margin-bottom: 20px;
+}
+.result-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 0.87rem;
+}
+.result-line:last-child { border-bottom: none; }
+.rl-label { color: rgba(255,255,255,0.55); }
+.rl-value { font-weight: 500; color: white; }
+.result-sep { height: 1px; background: rgba(255,255,255,0.1); margin: 14px 0 10px; }
+.result-range { display: flex; gap: 10px; margin-top: 4px; }
+.rr-item {
+  flex: 1; background: rgba(255,255,255,0.07);
+  border-radius: 10px; padding: 12px 16px; text-align: center;
+}
+.rr-sub { font-size: 0.68rem; opacity: 0.45; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.rr-val { font-size: 1.1rem; font-weight: 600; }
+.result-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; }
+.rt-label { font-size: 0.83rem; opacity: 0.6; }
+.rt-value { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: -0.02em; }
+
+/* ── RENTABILITÉ ── */
+.marge-indicator {
+  border-radius: var(--radius-sm);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+.marge-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.marge-go { background: var(--green-light); }
+.marge-dot-go { background: var(--green); }
+.marge-wait { background: var(--orange-light); }
+.marge-dot-wait { background: var(--orange); }
+.marge-no { background: var(--red-light); }
+.marge-dot-no { background: var(--red); }
+.marge-text-main { font-size: 1rem; font-weight: 600; }
+.marge-text-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+.renta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+.renta-box {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+.renta-box-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.renta-box-val { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+
+/* ── CHECKLIST ── */
+.section {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-icon {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.section-title { font-size: 0.92rem; font-weight: 600; letter-spacing: -0.01em; }
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+.check-item:last-of-type { border-bottom: none; }
+.check-lbl { flex: 1; font-size: 0.86rem; color: var(--text); padding-top: 1px; line-height: 1.5; }
+
+.check-box {
+  width: 19px; height: 19px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  flex-shrink: 0;
+  cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background: white;
+  transition: all 0.15s;
+  position: relative; margin-top: 2px;
+}
+.check-box:checked { background: var(--accent); border-color: var(--accent); }
+.check-box:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 5px;
+  width: 5px; height: 8px;
+  border: 2px solid white;
+  border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
+
+.radio-group { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 7px; }
+.radio-opt { display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 0.81rem; color: var(--text-muted); }
+.radio-opt input[type="radio"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+
+.comment-lbl {
+  font-size: 0.72rem; color: var(--text-muted); font-weight: 500;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  margin: 12px 0 5px; display: block;
+}
+.comment-area {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.83rem;
+  color: var(--text);
+  background: var(--surface2);
+  resize: vertical;
+  min-height: 64px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.comment-area:focus { border-color: var(--accent); }
+
+/* ── PLU BANNER ── */
+.plu-banner {
+  background: var(--accent2-light);
+  border: 1.5px solid #e8c98a;
+  border-radius: var(--radius-sm);
+  padding: 13px 17px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-top: 14px;
+}
+.plu-text { font-size: 0.84rem; color: var(--text); line-height: 1.5; }
+.plu-text a { color: var(--accent2); font-weight: 600; text-decoration: none; }
+.plu-text a:hover { text-decoration: underline; }
+
+/* ── LINKS ROW ── */
+.links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.ext-link:hover { background: white; border-color: var(--accent); color: var(--accent); }
+
+/* ── STATUT BADGE ── */
+.status-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.status-opt { display: none; }
+.status-lbl {
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1.5px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.17s;
+}
+.status-opt:checked + .status-lbl {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* ── MOBILE ── */
+@media (max-width: 600px) {
+  body { padding: 16px 12px 60px; }
+  header h1 { font-size: 1.5rem; }
+  .tabs { gap: 2px; padding: 4px; border-radius: 12px; }
+  .tab-btn { font-size: 0.72rem; padding: 9px 5px; border-radius: 8px; }
+  .card { padding: 18px 16px; }
+  .section { padding: 18px 16px; }
+  .col-2, .col-3, .field-grid { grid-template-columns: 1fr !important; }
+  .segmented { flex-wrap: wrap; }
+  .segmented label { flex: 0 0 calc(50% - 4px); font-size: 0.8rem; padding: 8px 6px; }
+  .renta-grid { grid-template-columns: 1fr 1fr !important; }
+  .renta-grid .renta-box[style*="span 3"] { grid-column: span 2 !important; }
+  .result-range { flex-direction: column; }
+  .links-row { flex-direction: column; }
+  .ext-link { width: 100%; justify-content: flex-start; }
+  .status-select { gap: 6px; }
+  .status-lbl { font-size: 0.75rem; padding: 6px 11px; }
+  .radio-group { gap: 10px; }
+  .rt-value { font-size: 1.5rem; }
+  .toggle-row { gap: 10px; }
+  .page-actions { margin-bottom: 12px; }
+  .result-card { padding: 20px 16px; }
+  input[type="text"], input[type="number"], input[type="tel"], input[type="email"], select, textarea {
+    font-size: 16px; /* évite le zoom auto iOS */
+  }
+}
+
+/* ── PRINT ── */
+@media print {
+  body { background: white; padding: 0; font-size: 10pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tabs { display: none !important; }
+  header h1 { font-size: 1.4rem; margin-bottom: 12pt; }
+  header p { display: block !important; color: #666; }
+  .tab-panel { display: block !important; }
+  .page-actions { display: none !important; }
+
+  /* Tous les champs lisibles en print */
+  input[type="text"], input[type="number"], input[type="tel"], input[type="email"], select, textarea {
+    background: white !important;
+    color: #111 !important;
+    border: 1px solid #bbb !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  input[readonly] {
+    background: #f0f0f0 !important;
+    color: #333 !important;
+    border: 1px solid #ccc !important;
+  }
+
+  /* Forcer l'affichage des valeurs saisies via appearance */
+  input, select, textarea { opacity: 1 !important; }
+
+  .card, .section {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 10pt;
+    background: white !important;
+  }
+
+  .result-card {
+    background: #1a1917 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .result-card * { color: white !important; }
+  .rl-label { color: rgba(255,255,255,0.65) !important; }
+
+  .marge-go { background: #e6f5ed !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .marge-wait { background: #fef0e6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .marge-no { background: #fdecea !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .marge-dot-go { background: #1e7a4a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .marge-dot-wait { background: #d4620a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .marge-dot-no { background: #c0392b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .plu-banner { background: #fdf3e3 !important; border: 1px solid #e8c98a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .segmented { background: #f5f5f5 !important; border: 1px solid #ddd !important; }
+  .segmented label { color: #555 !important; }
+  .segmented input[type="radio"]:checked + label { background: white !important; color: #111 !important; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.15) !important; }
+
+  /* Toggles : afficher l'état ON/OFF en texte */
+  .toggle-track { display: none !important; }
+  .toggle::after {
+    content: attr(data-state);
+    font-size: 9pt;
+    font-weight: 600;
+    color: #333;
+    padding: 2px 8px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+  }
+
+  .status-lbl { border: 1px solid #bbb !important; color: #555 !important; background: white !important; }
+  .status-opt:checked + .status-lbl { background: #e8f3ed !important; border-color: #2d6a4f !important; color: #2d6a4f !important; font-weight: 600; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .renta-box { background: #f8f8f6 !important; border: 1px solid #ddd !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .ext-link, .btn, .btn-dark, .btn-outline { display: none !important; }
+  .links-row { display: none !important; }
+
+  .container { max-width: 100%; }
+  .col-2, .col-3 { grid-template-columns: 1fr 1fr; }
+  .renta-grid { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* Séparateurs entre onglets à l'impression */
+  .tab-panel + .tab-panel { page-break-before: always; }
+
+  .check-box {
+    border: 1.5px solid #888 !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .check-box:checked { background: #2d6a4f !important; border-color: #2d6a4f !important; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Analyse Immobilière</h1>
+  <p>Qualification · Simulation · Rentabilité · Suivi</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('infos', this)">📍 Infos bien</button>
+  <button class="tab-btn" onclick="switchTab('urba', this)">🏛 Urbanisme</button>
+  <button class="tab-btn" onclick="switchTab('simu', this)">📊 Simulation</button>
+  <button class="tab-btn" onclick="switchTab('prospection', this)">📁 Prospection</button>
+  <button class="tab-btn" onclick="switchTab('checklist', this)">✅ Checklist</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     ONGLET 1 — INFOS DU BIEN
+══════════════════════════════════════ -->
+<div id="tab-infos" class="tab-panel active">
+
+  <div class="page-actions">
+    <button class="btn btn-dark btn-sm" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Exporter PDF
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Localisation</div>
+    <div class="field-grid col-1" style="margin-bottom:13px;">
+      <div class="field">
+        <label>Adresse du bien</label>
+        <input type="text" placeholder="12 rue des Lilas, 45000 Orléans">
+      </div>
+    </div>
+    <div class="field-grid col-2">
+      <div class="field">
+        <label>Commune</label>
+        <input type="text" placeholder="Orléans">
+      </div>
+      <div class="field">
+        <label>Zone PLU</label>
+        <input type="text" placeholder="UH, UC, 1AU…">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Surfaces &amp; gabarit</div>
+    <div class="field-grid col-3">
+      <div class="field">
+        <label>Surface du terrain (m²)</label>
+        <div class="input-wrap">
+          <input type="number" placeholder="800" min="0">
+          <span class="input-unit">m²</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Surface existante (m²)</label>
+        <div class="input-wrap">
+          <input type="number" placeholder="120" min="0">
+          <span class="input-unit">m²</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Emprise au sol autorisée</label>
+        <div class="input-wrap">
+          <input type="number" placeholder="40" min="0" max="100">
+          <span class="input-unit">%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Hauteur max autorisée</label>
+        <div class="input-wrap">
+          <input type="number" placeholder="9" min="0" step="0.5">
+          <span class="input-unit">m</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Type de bien</label>
+        <div class="select-wrap">
+          <select>
+            <option value="">Sélectionner…</option>
+            <option>Maison</option>
+            <option>Terrain nu</option>
+            <option>Immeuble</option>
+            <option>Grange / bâtiment</option>
+            <option>Terrain + bâti</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>État général</label>
+        <div class="select-wrap">
+          <select>
+            <option value="">Sélectionner…</option>
+            <option>Bon état</option>
+            <option>Rénovation légère</option>
+            <option>Rénovation lourde</option>
+            <option>Ruine / démolition</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Réseaux &amp; accès</div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">Tout à l'égout</div>
+        <div class="toggle-sub">Raccordement réseau collectif existant</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="info_egout">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">Eau potable</div>
+        <div class="toggle-sub">Raccordement réseau public</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">Électricité</div>
+        <div class="toggle-sub">Raccordement ENEDIS</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <div style="margin-top:16px;">
+      <div class="field">
+        <label>Accès / servitudes connues</label>
+        <textarea placeholder="Servitude de passage, largeur d'accès, chemin privé…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title-row">
+      <div class="card-title">Ressources externes</div>
+    </div>
+    <div class="links-row">
+      <a class="ext-link" href="https://www.cadastre.gouv.fr" target="_blank">
+        🗺 Cadastre.gouv.fr
+      </a>
+      <a class="ext-link" id="link-geoportail" href="https://www.geoportail.gouv.fr" target="_blank">
+        🛰 Géoportail
+      </a>
+      <a class="ext-link" href="https://app.dvf.etalab.gouv.fr/" target="_blank">
+        📈 DVF — Valeurs foncières
+      </a>
+      <a class="ext-link" href="https://www.meilleursagents.com/prix-immobilier/" target="_blank">
+        🏠 MeilleursAgents
+      </a>
+      <a class="ext-link" href="https://www.geoportail-urbanisme.gouv.fr/" target="_blank">
+        📋 Géoportail Urbanisme (PLU)
+      </a>
+    </div>
+  </div>
+
+</div><!-- /tab-infos -->
+
+
+<!-- ══════════════════════════════════════
+     ONGLET 2 — URBANISME
+══════════════════════════════════════ -->
+<div id="tab-urba" class="tab-panel">
+
+  <div class="page-actions">
+    <button class="btn btn-dark btn-sm" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Exporter PDF
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Potentiel de division / densification</div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">Division parcellaire possible</div>
+        <div class="toggle-sub">Selon règlement PLU en vigueur</div>
+      </div>
+      <label class="toggle"><input type="checkbox" onchange="calcUrba()"><span class="toggle-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">Détachement de parcelle envisageable</div>
+        <div class="toggle-sub">Sans modification de l'existant</div>
+      </div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">Zone inondable (PPRi)</div>
+        <div class="toggle-sub">Plan de prévention du risque inondation</div>
+      </div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">Droit de préemption (DPU)</div>
+        <div class="toggle-sub">Droit de préemption urbain actif sur la parcelle</div>
+      </div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <div class="toggle-lbl">OAP / Secteur protégé</div>
+        <div class="toggle-sub">Orientation d'aménagement et de programmation</div>
+      </div>
+      <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Règles de gabarit &amp; stationnement</div>
+    <div class="field-grid col-3">
+      <div class="field">
+        <label>Nombre de lots envisageables</label>
+        <input type="number" id="urba_lots" placeholder="2" min="1" oninput="calcUrba()">
+      </div>
+      <div class="field">
+        <label>Distance limites séparatives (m)</label>
+        <div class="input-wrap">
+          <input type="number" placeholder="3" min="0" step="0.5">
+          <span class="input-unit">m</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Stationnements obligatoires / logement</label>
+        <input type="number" placeholder="2" min="0">
+      </div>
+    </div>
+    <div class="field-grid col-1" style="margin-top:13px;">
+      <div class="field">
+        <label>Notes urbanisme / commentaires PLU</label>
+        <textarea placeholder="Règles spécifiques, contraintes de hauteur, implantation, aspect…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Démarches à effectuer</div>
+    <div class="links-row">
+      <a class="ext-link" href="https://www.geoportail-urbanisme.gouv.fr/" target="_blank">📋 Consulter le PLU en ligne</a>
+      <a class="ext-link" href="https://www.cadastre.gouv.fr" target="_blank">🗺 Cadastre — parcelles</a>
+      <a class="ext-link" href="https://www.service-public.fr/particuliers/vosdroits/F17355" target="_blank">📄 CU opérationnel (info)</a>
+      <a class="ext-link" href="https://www.georisques.gouv.fr/" target="_blank">⚠️ Géorisques</a>
+    </div>
+    <div style="margin-top:16px; padding:14px 16px; background:var(--surface2); border:1.5px solid var(--border); border-radius:var(--radius-sm);">
+      <div style="font-size:0.78rem; font-weight:600; color:var(--text-muted); letter-spacing:0.05em; text-transform:uppercase; margin-bottom:6px;">💡 Certificat d'Urbanisme Opérationnel</div>
+      <div style="font-size:0.83rem; color:var(--text); line-height:1.6;">Le CU opérationnel (CUb) confirme la faisabilité d'un projet précis sur une parcelle. Délai : <strong>2 mois</strong>. À déposer en mairie ou via le portail national <a href="https://www.service-public.fr" target="_blank" style="color:var(--accent);font-weight:500;">service-public.fr</a>.</div>
+    </div>
+  </div>
+
+</div><!-- /tab-urba -->
+
+
+<!-- ══════════════════════════════════════
+     ONGLET 3 — SIMULATION & RENTABILITÉ
+══════════════════════════════════════ -->
+<div id="tab-simu" class="tab-panel">
+
+  <div class="page-actions">
+    <button class="btn btn-dark btn-sm" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Exporter PDF
+    </button>
+  </div>
+
+  <!-- Type d'opération -->
+  <div class="card">
+    <div class="card-title">Type d'opération</div>
+    <div class="segmented">
+      <input type="radio" name="op_type" id="op_division" value="division" checked onchange="calcSimu()">
+      <label for="op_division">Division terrain</label>
+      <input type="radio" name="op_type" id="op_renov" value="renovation" onchange="calcSimu()">
+      <label for="op_renov">Rénovation</label>
+      <input type="radio" name="op_type" id="op_immeuble" value="immeuble" onchange="calcSimu()">
+      <label for="op_immeuble">Immeuble</label>
+      <input type="radio" name="op_type" id="op_surele" value="surelevation" onchange="calcSimu()">
+      <label for="op_surele">Surélévation</label>
+    </div>
+  </div>
+
+  <!-- Données projet -->
+  <div class="card">
+    <div class="card-title">Données du projet</div>
+    <div class="field-grid col-3">
+      <div class="field">
+        <label>Nombre de lots</label>
+        <input type="number" id="s_lots" placeholder="3" min="1" oninput="calcSimu()">
+      </div>
+      <div class="field">
+        <label>Surface moy. par lot (m²)</label>
+        <div class="input-wrap">
+          <input type="number" id="s_surf_lot" placeholder="80" min="0" oninput="calcSimu()">
+          <span class="input-unit">m²</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Surface vendable totale</label>
+        <div class="input-wrap">
+          <input type="number" id="s_surf_total" placeholder="—" readonly>
+          <span class="input-unit">m²</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Prix moyen marché (€/m²)</label>
+        <div class="input-wrap">
+          <input type="number" id="s_prix_m2" placeholder="2800" min="0" oninput="calcSimu()">
+          <span class="input-unit">€/m²</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Prix de vente estimé / lot</label>
+        <div class="input-wrap">
+          <input type="number" id="s_pv_lot" placeholder="—" readonly>
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>CA potentiel total</label>
+        <div class="input-wrap">
+          <input type="number" id="s_ca" placeholder="—" readonly>
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coûts -->
+  <div class="card">
+    <div class="card-title">Structure des coûts</div>
+    <div class="field-grid col-2">
+      <div class="field">
+        <label>Type de bien</label>
+        <div class="segmented" style="margin-top:2px;">
+          <input type="radio" name="r_type_bien" id="r_tb_maison" value="maison" checked onchange="calcRenta()">
+          <label for="r_tb_maison">🏠 Maison</label>
+          <input type="radio" name="r_type_bien" id="r_tb_terrain" value="terrain" onchange="calcRenta()">
+          <label for="r_tb_terrain">🌿 Terrain</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Frais notariaux</label>
+        <div class="segmented" style="margin-top:2px;">
+          <input type="radio" name="r_notaire" id="r_fn_3" value="3" checked onchange="calcRenta()">
+          <label for="r_fn_3">3 %</label>
+          <input type="radio" name="r_notaire" id="r_fn_35" value="3.5" onchange="calcRenta()">
+          <label for="r_fn_35">3,5 %</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field-grid col-2">
+      <div class="field">
+        <label>Prix du bien (€)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_prix" placeholder="250 000" min="0" step="1000" oninput="calcRenta()">
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Travaux estimés (€)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_travaux" placeholder="80 000" min="0" step="1000" oninput="calcRenta()">
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Honoraires / études (€)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_honoraires" placeholder="15 000" min="0" step="500" oninput="calcRenta()">
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Frais divers (€)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_divers" placeholder="5 000" min="0" step="500" oninput="calcRenta()">
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="margin-bottom:10px; font-size:0.78rem; font-weight:500; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em;">Financement</div>
+    <div class="field-grid col-2">
+      <div class="field">
+        <label>Tout à l'égout — raccordement</label>
+        <div class="toggle-row" style="padding:8px 0;">
+          <div class="toggle-info"><div class="toggle-sub">+10 000 € si non raccordé</div></div>
+          <label class="toggle"><input type="checkbox" id="r_egout" onchange="calcRenta()"><span class="toggle-track"></span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Surface à rénover (pour auto-calcul travaux)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_surface" placeholder="120" min="0" oninput="calcRentaAuto()">
+          <span class="input-unit">m²</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field-grid col-2">
+      <div class="field">
+        <label>Apport personnel (€)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_apport" placeholder="50 000" min="0" step="1000" oninput="calcRenta()">
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Montant emprunté (calculé auto)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_emprunt" readonly placeholder="—">
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Résultats coût projet -->
+  <div class="result-card">
+    <div class="result-title">Coût total du projet</div>
+    <div id="r_result_lines">
+      <div class="result-line" style="opacity:0.35; font-style:italic; font-size:0.84rem;">
+        <span class="rl-label">Renseignez le prix du bien pour démarrer…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rentabilité -->
+  <div class="card">
+    <div class="card-title">Analyse de rentabilité</div>
+    <div class="field-grid col-2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>CA prévisionnel (€)</label>
+        <div class="input-wrap">
+          <input type="number" id="r_ca_prev" placeholder="450 000" min="0" step="1000" oninput="calcMarge()">
+          <span class="input-unit">€</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Ou reprendre le CA simulé ci-dessus</label>
+        <button class="btn btn-outline" onclick="importCA()" style="margin-top:2px; width:100%; justify-content:center;">
+          ↑ Importer le CA de la simulation
+        </button>
+      </div>
+    </div>
+
+    <div id="renta_result" style="display:none;">
+      <div class="renta-grid" id="renta_boxes"></div>
+      <div class="marge-indicator" id="marge_indicator"></div>
+    </div>
+    <div id="renta_empty" style="font-size:0.84rem; color:var(--text-muted); font-style:italic; padding:4px 0;">
+      Renseignez le prix du bien et le CA prévisionnel pour voir la rentabilité.
+    </div>
+  </div>
+
+</div><!-- /tab-simu -->
+
+
+<!-- ══════════════════════════════════════
+     ONGLET 4 — PROSPECTION
+══════════════════════════════════════ -->
+<div id="tab-prospection" class="tab-panel">
+
+  <div class="page-actions">
+    <button class="btn btn-dark btn-sm" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Exporter PDF
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Source du bien</div>
+    <div class="segmented">
+      <input type="radio" name="source" id="src_agence" value="agence" checked>
+      <label for="src_agence">Agence</label>
+      <input type="radio" name="source" id="src_notaire" value="notaire">
+      <label for="src_notaire">Notaire</label>
+      <input type="radio" name="source" id="src_apporteur" value="apporteur">
+      <label for="src_apporteur">Apporteur</label>
+      <input type="radio" name="source" id="src_particulier" value="particulier">
+      <label for="src_particulier">Particulier</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Contact vendeur</div>
+    <div class="field-grid col-2">
+      <div class="field">
+        <label>Nom / Raison sociale</label>
+        <input type="text" placeholder="M. Dupont / Agence Immobilière X">
+      </div>
+      <div class="field">
+        <label>Téléphone</label>
+        <input type="tel" placeholder="06 00 00 00 00">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="contact@exemple.fr">
+      </div>
+      <div class="field">
+        <label>Date de contact</label>
+        <input type="text" placeholder="12/03/2026">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Statut du dossier</div>
+    <div class="status-select">
+      <input type="radio" name="statut" id="st_appel" class="status-opt" checked>
+      <label for="st_appel" class="status-lbl">📞 À appeler</label>
+      <input type="radio" name="statut" id="st_visite" class="status-opt">
+      <label for="st_visite" class="status-lbl">🏠 Visite prévue</label>
+      <input type="radio" name="statut" id="st_offre" class="status-opt">
+      <label for="st_offre" class="status-lbl">✍️ Offre en cours</label>
+      <input type="radio" name="statut" id="st_refuse" class="status-opt">
+      <label for="st_refuse" class="status-lbl">❌ Refusé</label>
+      <input type="radio" name="statut" id="st_signe" class="status-opt">
+      <label for="st_signe" class="status-lbl">✅ Signé</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Note personnelle</div>
+    <textarea style="min-height:120px;" placeholder="Impressions, points bloquants, prochaines étapes, rappels…"></textarea>
+  </div>
+
+</div><!-- /tab-prospection -->
+
+
+<!-- ══════════════════════════════════════
+     ONGLET 5 — CHECKLIST VISITE
+══════════════════════════════════════ -->
+<div id="tab-checklist" class="tab-panel">
+
+  <div class="page-actions">
+    <button class="btn btn-dark btn-sm" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Exporter PDF
+    </button>
+  </div>
+
+  <!-- Général -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#f0f0ec;">📋</div>
+      <div class="section-title">Général</div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Typologie du bien</strong>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="cl_type"> Maison</label>
+          <label class="radio-opt"><input type="radio" name="cl_type"> Terrain</label>
+          <label class="radio-opt"><input type="radio" name="cl_type"> Immeuble</label>
+          <label class="radio-opt"><input type="radio" name="cl_type"> Grange / bâtiment</label>
+        </div>
+      </div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Photos réalisées lors de la visite</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Références cadastrales relevées</strong></div>
+    </div>
+  </div>
+
+  <!-- VRD -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#eaf3ee;">⚡</div>
+      <div class="section-title">Réseaux VRD</div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Électricité</strong>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="cl_elec"> Aux normes</label>
+          <label class="radio-opt"><input type="radio" name="cl_elec"> Non conforme</label>
+          <label class="radio-opt"><input type="radio" name="cl_elec"> À vérifier</label>
+        </div>
+      </div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Eau / Plomberie</strong>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="cl_eau"> Aux normes</label>
+          <label class="radio-opt"><input type="radio" name="cl_eau"> Non conforme</label>
+          <label class="radio-opt"><input type="radio" name="cl_eau"> À vérifier</label>
+        </div>
+      </div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Système de chauffage</strong>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="cl_chauff"> Gaz</label>
+          <label class="radio-opt"><input type="radio" name="cl_chauff"> Électrique</label>
+          <label class="radio-opt"><input type="radio" name="cl_chauff"> PAC</label>
+          <label class="radio-opt"><input type="radio" name="cl_chauff"> Fioul</label>
+          <label class="radio-opt"><input type="radio" name="cl_chauff"> Absent</label>
+        </div>
+      </div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Tout à l'égout</strong>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="cl_egout"> Raccordé</label>
+          <label class="radio-opt"><input type="radio" name="cl_egout"> Non raccordé</label>
+          <label class="radio-opt"><input type="radio" name="cl_egout"> Fosse septique</label>
+        </div>
+      </div>
+    </div>
+    <span class="comment-lbl">Commentaires VRD</span>
+    <textarea class="comment-area" placeholder="Notes sur l'état des réseaux…"></textarea>
+  </div>
+
+  <!-- Plans & mesures -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#eef3fb;">📐</div>
+      <div class="section-title">Plans &amp; Mesures</div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Plans du bien récupérés</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Surfaces mesurées / vérifiées</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Accès au terrain vérifié</strong></div>
+    </div>
+    <span class="comment-lbl">Détails accès &amp; plans</span>
+    <textarea class="comment-area" placeholder="Largeur de voie, accès pompiers, servitude de passage…"></textarea>
+  </div>
+
+  <!-- Quartier -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#f5f0fb;">🏘️</div>
+      <div class="section-title">Quartier &amp; Environnement</div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Visite de l'environnement immédiat</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Nuisances sonores / visuelles relevées</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Proximité commodités (écoles, commerces, transports)</strong></div>
+    </div>
+    <span class="comment-lbl">Commentaires quartier</span>
+    <textarea class="comment-area" placeholder="Impressions générales, points d'attention…"></textarea>
+  </div>
+
+  <!-- Toiture -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fef4ec;">🏗️</div>
+      <div class="section-title">Toiture &amp; Structure</div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Vérification visuelle de la toiture</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Travaux toiture à prévoir ?</strong>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="cl_toiture"> Oui</label>
+          <label class="radio-opt"><input type="radio" name="cl_toiture"> Non</label>
+          <label class="radio-opt"><input type="radio" name="cl_toiture"> À confirmer</label>
+        </div>
+      </div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Présence d'humidité / infiltrations</strong></div>
+    </div>
+    <span class="comment-lbl">État de la toiture &amp; structure</span>
+    <textarea class="comment-area" placeholder="Âge de la toiture, tuiles, zinguerie, charpente, isolation…"></textarea>
+  </div>
+
+  <!-- DPE / PLU -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#edfaf3;">🌱</div>
+      <div class="section-title">DPE / Documents</div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Note DPE relevée</strong>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> A</label>
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> B</label>
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> C</label>
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> D</label>
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> E</label>
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> F</label>
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> G</label>
+          <label class="radio-opt"><input type="radio" name="cl_dpe"> Non fourni</label>
+        </div>
+      </div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Diagnostics techniques récupérés (amiante, plomb, termites…)</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>PLU consulté pour la parcelle</strong></div>
+    </div>
+    <span class="comment-lbl">Commentaires DPE / urbanisme</span>
+    <textarea class="comment-area" placeholder="Contraintes PLU, servitudes, zones inondables…"></textarea>
+  </div>
+
+  <!-- Étude terrain -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#f5f0ea;">🔭</div>
+      <div class="section-title">Étude du terrain</div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl">
+        <strong>Géomètre contacté</strong>
+        <div style="font-size:0.79rem; color:var(--text-muted); margin-top:2px;">Mise en copropriété &amp; bornage du terrain</div>
+      </div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Étude de sol réalisée ou commandée</strong></div>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" class="check-box">
+      <div class="check-lbl"><strong>Présence d'arbres / contraintes paysagères</strong></div>
+    </div>
+    <span class="comment-lbl">Notes terrain</span>
+    <textarea class="comment-area" placeholder="Topographie, orientation, nature du sol…"></textarea>
+  </div>
+
+  <div class="plu-banner">
+    <span style="font-size:18px; flex-shrink:0;">🗺️</span>
+    <div class="plu-text">
+      <strong>PLU &amp; cadastre à consulter :</strong>
+      <a href="https://www.cadastre.gouv.fr" target="_blank">cadastre.gouv.fr</a> ·
+      <a href="https://www.geoportail-urbanisme.gouv.fr/" target="_blank">geoportail-urbanisme.gouv.fr</a>
+      — Vérifier constructibilité, COS, servitudes et limites de parcelle.
+    </div>
+  </div>
+
+</div><!-- /tab-checklist -->
+
+</div><!-- /container -->
+
+<script>
+/* ── UTILS ── */
+function fmt(n) {
+  return new Intl.NumberFormat('fr-FR', { style:'currency', currency:'EUR', maximumFractionDigits:0 }).format(n);
+}
+function fmtN(n, dec=1) {
+  return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: dec }).format(n);
+}
+
+/* ── TABS ── */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── SIMULATION ── */
+function calcSimu() {
+  const lots = parseFloat(document.getElementById('s_lots').value) || 0;
+  const surfLot = parseFloat(document.getElementById('s_surf_lot').value) || 0;
+  const prixM2 = parseFloat(document.getElementById('s_prix_m2').value) || 0;
+
+  const surfTotal = lots * surfLot;
+  const pvLot = surfLot * prixM2;
+  const ca = surfTotal * prixM2;
+
+  document.getElementById('s_surf_total').value = surfTotal > 0 ? surfTotal : '';
+  document.getElementById('s_pv_lot').value = pvLot > 0 ? pvLot : '';
+  document.getElementById('s_ca').value = ca > 0 ? ca : '';
+}
+
+function importCA() {
+  const ca = document.getElementById('s_ca').value;
+  if (ca) {
+    document.getElementById('r_ca_prev').value = ca;
+    calcMarge();
+  }
+}
+
+/* ── RENTABILITÉ — auto-calcul travaux depuis surface ── */
+function calcRentaAuto() {
+  const surf = parseFloat(document.getElementById('r_surface').value) || 0;
+  if (surf > 0) {
+    // On met la valeur moyenne dans le champ travaux (900€/m²)
+    document.getElementById('r_travaux').value = surf * 900;
+  }
+  calcRenta();
+}
+
+/* ── RENTABILITÉ — calcul principal ── */
+function calcRenta() {
+  const prix       = parseFloat(document.getElementById('r_prix').value) || 0;
+  const notairePct = parseFloat(document.querySelector('input[name="r_notaire"]:checked').value) / 100;
+  const travaux    = parseFloat(document.getElementById('r_travaux').value) || 0;
+  const honoraires = parseFloat(document.getElementById('r_honoraires').value) || 0;
+  const divers     = parseFloat(document.getElementById('r_divers').value) || 0;
+  const egout      = document.getElementById('r_egout').checked;
+  const apport     = parseFloat(document.getElementById('r_apport').value) || 0;
+
+  if (prix === 0) {
+    document.getElementById('r_result_lines').innerHTML = `<div class="result-line" style="opacity:0.35; font-style:italic; font-size:0.83rem;"><span class="rl-label">Renseignez le prix du bien pour démarrer…</span></div>`;
+    return;
+  }
+
+  const fraisNotaire  = prix * notairePct;
+  const fraisEgout    = egout ? 10000 : 0;
+  const baseFinan     = prix + travaux + fraisEgout;
+  const emprunt       = Math.max(0, baseFinan - apport);
+  const fraisBancaires= emprunt * 0.05;
+
+  const coutTotal = prix + fraisNotaire + travaux + honoraires + divers + fraisEgout + fraisBancaires;
+  const surfTotal = parseFloat(document.getElementById('r_surface').value) || 0;
+  const prixRevient = surfTotal > 0 ? coutTotal / surfTotal : 0;
+
+  // Update emprunt field
+  document.getElementById('r_emprunt').value = emprunt > 0 ? emprunt : '';
+
+  let lines = `
+    <div class="result-line"><span class="rl-label">Prix du bien</span><span class="rl-value">${fmt(prix)}</span></div>
+    <div class="result-line"><span class="rl-label">Frais notariaux (${(notairePct*100).toFixed(1)} %)</span><span class="rl-value">${fmt(fraisNotaire)}</span></div>`;
+
+  if (travaux > 0) lines += `<div class="result-line"><span class="rl-label">Travaux</span><span class="rl-value">${fmt(travaux)}</span></div>`;
+  if (honoraires > 0) lines += `<div class="result-line"><span class="rl-label">Honoraires / études</span><span class="rl-value">${fmt(honoraires)}</span></div>`;
+  if (divers > 0) lines += `<div class="result-line"><span class="rl-label">Frais divers</span><span class="rl-value">${fmt(divers)}</span></div>`;
+  if (egout) lines += `<div class="result-line"><span class="rl-label">Raccordement égout</span><span class="rl-value">${fmt(fraisEgout)}</span></div>`;
+
+  lines += `<div class="result-sep"></div>`;
+  if (apport > 0) lines += `<div class="result-line"><span class="rl-label">Apport personnel</span><span class="rl-value" style="color:rgba(255,255,255,0.4)">− ${fmt(apport)}</span></div>`;
+  if (emprunt > 0) lines += `<div class="result-line"><span class="rl-label">Montant emprunté</span><span class="rl-value">${fmt(emprunt)}</span></div>`;
+  if (emprunt > 0) lines += `<div class="result-line"><span class="rl-label">Frais bancaires (5 %)</span><span class="rl-value">${fmt(fraisBancaires)}</span></div>`;
+
+  lines += `<div class="result-sep"></div>
+    <div class="result-total">
+      <span class="rt-label">Coût total de l'opération</span>
+      <span class="rt-value">${fmt(coutTotal)}</span>
+    </div>`;
+
+  if (prixRevient > 0) {
+    lines += `<div class="result-line" style="margin-top:8px;"><span class="rl-label">Prix de revient au m²</span><span class="rl-value">${fmtN(prixRevient, 0)} €/m²</span></div>`;
+  }
+
+  document.getElementById('r_result_lines').innerHTML = lines;
+
+  // Store cost total for marge calc
+  window._coutTotal = coutTotal;
+  calcMarge();
+}
+
+/* ── MARGE ── */
+function calcMarge() {
+  const coutTotal = window._coutTotal || 0;
+  const ca = parseFloat(document.getElementById('r_ca_prev').value) || 0;
+
+  if (coutTotal === 0 || ca === 0) {
+    document.getElementById('renta_result').style.display = 'none';
+    document.getElementById('renta_empty').style.display = 'block';
+    return;
+  }
+
+  const marge = ca - coutTotal;
+  const margePct = (marge / ca) * 100;
+  const surfTotal = parseFloat(document.getElementById('r_surface').value) || 0;
+  const margeM2 = surfTotal > 0 ? marge / surfTotal : 0;
+
+  document.getElementById('renta_result').style.display = 'block';
+  document.getElementById('renta_empty').style.display = 'none';
+
+  // Boxes
+  let boxes = `
+    <div class="renta-box">
+      <div class="renta-box-label">CA prévisionnel</div>
+      <div class="renta-box-val">${fmt(ca)}</div>
+    </div>
+    <div class="renta-box">
+      <div class="renta-box-label">Marge brute</div>
+      <div class="renta-box-val" style="color:${marge >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt(marge)}</div>
+    </div>
+    <div class="renta-box">
+      <div class="renta-box-label">Marge %</div>
+      <div class="renta-box-val" style="color:${margePct >= 30 ? 'var(--green)' : margePct >= 20 ? 'var(--orange)' : 'var(--red)'}">
+        ${fmtN(margePct, 1)} %
+      </div>
+    </div>`;
+
+  if (margeM2 !== 0) {
+    boxes += `<div class="renta-box" style="grid-column: span 3;">
+      <div class="renta-box-label">Coût total opération</div>
+      <div class="renta-box-val">${fmt(coutTotal)}</div>
+    </div>`;
+  }
+
+  document.getElementById('renta_boxes').innerHTML = boxes;
+
+  // Indicator
+  let cls, dotCls, emoji, label, sub;
+  if (margePct >= 30) {
+    cls = 'marge-go'; dotCls = 'marge-dot-go';
+    emoji = '🟢'; label = 'GO — Projet rentable';
+    sub = `Marge de ${fmtN(margePct,1)} % — objectif 30 % atteint`;
+  } else if (margePct >= 20) {
+    cls = 'marge-wait'; dotCls = 'marge-dot-wait';
+    emoji = '🟠'; label = 'À étudier — Marge limite';
+    sub = `Marge de ${fmtN(margePct,1)} % — sous l'objectif de 30 %`;
+  } else {
+    cls = 'marge-no'; dotCls = 'marge-dot-no';
+    emoji = '🔴'; label = 'Refus — Marge insuffisante';
+    sub = `Marge de ${fmtN(margePct,1)} % — bien en dessous de 20 %`;
+  }
+
+  document.getElementById('marge_indicator').className = `marge-indicator ${cls}`;
+  document.getElementById('marge_indicator').innerHTML = `
+    <div class="marge-dot ${dotCls}"></div>
+    <div>
+      <div class="marge-text-main">${emoji} ${label}</div>
+      <div class="marge-text-sub">${sub}</div>
+    </div>`;
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', () => {
+  // Listeners calcul renta
+  ['r_prix','r_travaux','r_honoraires','r_divers','r_apport','r_ca_prev'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', id === 'r_ca_prev' ? calcMarge : calcRenta);
+  });
+  document.querySelectorAll('input[name="r_notaire"], input[name="r_type_bien"]').forEach(el => {
+    el.addEventListener('change', calcRenta);
+  });
+  document.getElementById('r_egout').addEventListener('change', calcRenta);
+  document.getElementById('r_surface').addEventListener('input', calcRentaAuto);
+  document.getElementById('s_lots').addEventListener('input', calcSimu);
+  document.getElementById('s_surf_lot').addEventListener('input', calcSimu);
+  document.getElementById('s_prix_m2').addEventListener('input', calcSimu);
+});
+</script>
+</body>
+</html>
